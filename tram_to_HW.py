@@ -4,7 +4,7 @@
     Actualizar diccionario: lee el diccionario y actualiza los datos """
 
 dicc ={'batch': ('00000000', 'OK ', '000'),
- 'fecha': ('20140412', '09:26:51'),
+ 'fecha': ('20000000', '09:26:51'),
  'mp34': ('00000000', 'OK ', '000'),
  'nombre_proceso': 'CICLDA21',
  'online': ('00000000', 'OK ', '000'),

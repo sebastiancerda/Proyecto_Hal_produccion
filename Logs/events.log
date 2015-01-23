@@ -290,3 +290,77 @@ WARNING:root:Logger iniciado
 01/20/2015 11:45:42 AM Empiezan las comunicaciones con el Hardware HAL3270
 01/20/2015 11:45:42 AM Puerto configurado correctamente: 192.168.2.108:8888
 01/20/2015 11:45:42 AM Evento Hardware: HAL3270v1,EST:MUE/005,ONLINE/0008/0070/0008/OFF,BATCH/0002/0020/0002/OFF,MP34/OFF
+01/23/2015 03:47:39 PM asdfasdf
+01/23/2015 03:48:13 PM asdfasfd
+01/23/2015 03:48:32 PM asdfasdf
+None
+01/23/2015 03:48:37 PM asdfasfd
+01/23/2015 03:48:38 PM asdfasfd
+01/23/2015 03:48:39 PM asdfasdf
+None
+01/23/2015 03:49:01 PM <class 'serial.serialutil.SerialException'>
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/IPython/terminal/interactiveshell.py", line 521, in interact
+    line = self.raw_input(prompt)
+  File "/usr/local/lib/python2.7/dist-packages/IPython/terminal/interactiveshell.py", line 590, in raw_input
+    line = py3compat.str_to_unicode(self.raw_input_original(prompt))
+KeyboardInterrupt
+01/23/2015 03:53:08 PM asdfasdf
+01/23/2015 03:54:06 PM plis
+01/23/2015 03:59:04 PM asdasd
+01/23/2015 03:59:40 PM plis
+01/23/2015 04:00:24 PM Logger iniciado
+01/23/2015 04:00:24 PM Inicio de programa
+01/23/2015 04:00:24 PM Inicia programa
+01/23/2015 04:00:34 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:05:37 PM Logger iniciado
+01/23/2015 04:05:37 PM Inicio de programa
+01/23/2015 04:05:37 PM Inicia programa
+01/23/2015 04:05:47 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:06:04 PM Logger iniciado
+01/23/2015 04:06:04 PM Inicio de programa
+01/23/2015 04:06:04 PM Inicia programa
+01/23/2015 04:06:14 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:06:33 PM Logger iniciado
+01/23/2015 04:06:33 PM Inicio de programa
+01/23/2015 04:06:33 PM Inicia programa
+01/23/2015 04:06:43 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:44:28 PM Device "eht0" does not exist.
+
+01/23/2015 04:46:45 PM Cable desconectado
+01/23/2015 04:46:49 PM Cable desconectado
+01/23/2015 04:51:13 PM Logger iniciado
+01/23/2015 04:51:13 PM Inicio de programa
+01/23/2015 04:51:13 PM Inicia programa
+01/23/2015 04:51:23 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:53:28 PM Logger iniciado
+01/23/2015 04:53:28 PM Inicio de programa
+01/23/2015 04:53:28 PM Inicia programa
+01/23/2015 04:53:38 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:56:16 PM Logger iniciado
+01/23/2015 04:56:16 PM Inicio de programa
+01/23/2015 04:56:16 PM Inicia programa
+01/23/2015 04:56:16 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:56:16 PM Error en el archivo de configuraciones, formato incorrecto
+01/23/2015 04:57:05 PM Logger iniciado
+01/23/2015 04:57:05 PM Inicio de programa
+01/23/2015 04:57:05 PM Inicia programa
+01/23/2015 04:57:05 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:57:05 PM Error en el archivo de configuraciones, formato incorrecto
+01/23/2015 04:58:06 PM Logger iniciado
+01/23/2015 04:58:06 PM Inicio de programa
+01/23/2015 04:58:06 PM Inicia programa
+01/23/2015 04:58:06 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 04:58:06 PM Puerto configurado correctamente: 192.168.2.108:8888
+01/23/2015 05:08:27 PM Logger iniciado
+01/23/2015 05:08:27 PM Inicio de programa
+01/23/2015 05:08:27 PM Inicia programa
+01/23/2015 05:08:27 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 05:08:27 PM Puerto configurado correctamente: 192.168.2.108:8888
+01/23/2015 05:11:20 PM Logger iniciado
+01/23/2015 05:11:20 PM Inicio de programa
+01/23/2015 05:11:20 PM Inicia programa
+01/23/2015 05:11:21 PM Creada instancia de comunicacion con el Hardware
+01/23/2015 05:11:21 PM Puerto configurado correctamente: 192.168.2.108:8888
+01/23/2015 05:31:59 PM Logger iniciado
+01/23/2015 05:31:59 PM Inicio de programa
