@@ -21,7 +21,7 @@ lista[6] = '<--- <000> O/00034569/OK /000 B/00274560/OK /178 M/00056853/OK /254 
 
 lista[7] = '<--- <000> O/00002429/OK /000 B/00741560/ERR/274 M/00086612/ERR/463 F/20140412/09:28:04/CICLDA21/000010/060'
 
-lista[8] = '<--- <000> O/00003859/ERR/264 B/00747560/OK /178 M/00967812/ERR/283 F/20140412/13:49:50/CICLDA21/000201/034'
+lista[8] = '<--- <123> O/00003859/ERR/264 B/00747560/OK /178 M/00967812/ERR/283 F/20140412/13:49:50/CICLDA21/000201/034'
 
 lista[9] = '<--- <000> O/12456789/OK /000 B/07451560/ERR/835 M/00043512/OK /254 F/20140412/19:56:34/CICLDA21/000223/015'
 
@@ -34,7 +34,7 @@ from thread import *
 from termcolor import colored
 import time
 HOST = ''   # Nombre simbolico localhost
-PORT = 8888 # puerto arbitrario
+PORT = 1000 # puerto arbitrario
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket creado'
@@ -78,6 +78,7 @@ def clientthread(conn):
         random = randint(0,9)
         print colored(lista[random], 'red')
         msje_salida = lista[random]
+        time.sleep(randint(1, 10))
         msje_salida = msje_salida.decode('ascii').encode('EBCDIC-CP-BE')
         conn.sendall(msje_salida)
      
