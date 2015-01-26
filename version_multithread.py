@@ -22,35 +22,6 @@ salto_de_linea = '\r'
 exitFlag = 0
 
 
-def director_socket():
-
-    conx = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    conx.settimeout(5)
-    conx.connect(('', 1000))
-    conx.recv(1024)
-    conx.send('sadfdsfasfd'.decode('ascii').encode('EBCDIC-CP-BE'))
-    cola.put(conx.recv(1024))
-    conx.close()
-
-
-while True:
-    print contador
-    contador +=1
-    contador_delay +=1
-    if contador_delay >delay:
-        print 'Inicia tarea socket'
-        tarea_socket = threading.Thread(target = director_socket)
-        tarea_socket.start()
-        contador_delay = 0
-    time.sleep(1)
-    if not(cola.empty()):
-        trama = cola.get()
-        trama = trama.decode('EBCDIC-CP-BE').encode('ascii')
-        print trama
-        obj_dicc.director_busqueda(trama)
-
-
-
 class Redirector:
     '''
     Redirige, gestiona y alimenta las comunicaciones desifrando
