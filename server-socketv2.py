@@ -142,8 +142,11 @@ def clientthread(conn):
 #Para mantenerse hablando con el server
 while 1:
     #Espera para aceptar una coneccion
+    now = time.time()
     conn, addr = s.accept()
     print 'Conectado con : ' + addr[0] + ':' + str(addr[1])
+    ahora = time.time()
+    print colored(ahora - now, 'red')
     #Inicia una nueva tarea tomando el primer argumento ccomo el nombre de la funcion para correr
     #el segundo argumento es una tupla para la funcion
     start_new_thread(clientthread ,(conn,))

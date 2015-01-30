@@ -206,6 +206,16 @@ class Tram_to_Serial:
     def cambiar_statuslan(self, status):
         self.status_lan = str(status)
 
+    def lcd_return(self):
+        x = datetime.datetime.now()
+        fecha = '/'.join([time.strftime('%d'), time.strftime('%m'),str(x.year)])
+        hora = time.strftime('%H:%M:%S')
+        trama = self.header + self.header_Lcd + fecha + ',' + hora + ',' + self.nombre_proceso
+        self.time_contador += 1
+
+        print trama
+        return trama
+
 
 if __name__ == '__main__':
     pass

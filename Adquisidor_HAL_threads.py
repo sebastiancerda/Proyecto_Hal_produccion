@@ -13,7 +13,7 @@ import ConfigParser
 
 import subprocess
 from subprocess import Popen
-# from server_serial import SimSerial
+from server_serial import SimSerial
 from termcolor import colored
 import sched
 
@@ -39,9 +39,9 @@ class Redirector(object):
         self.socket = socket
         self.config = config
         self.scheduler = scheduler
-        self.filename_config = '/home/Adquisidor/librerias/config.ini'
+        self.filename_config = './librerias/config.ini'
         self.salto_de_linea = '\r'
-        self.interfaz_socket = 'eth0'
+        self.interfaz_socket = 'wlan0'
         self.lan_config = False
         self.port = 1
         self.ip = ''
@@ -118,6 +118,7 @@ class Redirector(object):
                 if not self.lan_config:
                     self.parser_status_socket()
                 if self.lan_config and not self.thread_alive:
+                    print 'Evento socket'
                     self.thread_alive = not self.thread_alive
                     self.scheduler.enter(self.delay, 1, self.adquisidor_socket,
                                          (self.ip, self.port, self.respuesta_hal,))
@@ -175,13 +176,12 @@ class Redirector(object):
             conx.close()
             self.thread_alive = not self.thread_alive
 
-
     def inicializacion_serial(self):
         time.sleep(10)
-        self.serial.port = '/dev/ttyxuart2'
-        self.serial.baudrate = 38400
-        self.serial.timeout = 2
-        self.serial.open()
+        # self.serial.port = '/dev/ttyxuart2'
+        # self.serial.baudrate = 38400
+        # self.serial.timeout = 2
+        # self.serial.open()
 
         self.serial.write(self.trama_salida + self.salto_de_linea)
         time.sleep(1.0/3)
@@ -261,7 +261,6 @@ class Redirector(object):
             self.config_lan = True
             self.no_configlan = False
 
-
     def estado_ethernet(self, ethx):
         c = Popen(['/sbin/ip', 'link', 'show', ethx], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         c2, err = c.communicate()
@@ -292,9 +291,9 @@ class Redirector(object):
                     self.logger.warning(respuesta)
 
 if __name__ == '__main__':
-    ser = serial.Serial()
-    # ser = SimSerial()
-    filename = '/home/Adquisidor/Logs/events.log'
+    # ser = serial.Serial()
+    ser = SimSerial()
+    filename = './Logs/events.log'
     logger = logging.getLogger('root')
     logging.basicConfig(filename=filename,
                         format='%(asctime)s - %(funcName)s - %(levelname)s: %(message)s ',
