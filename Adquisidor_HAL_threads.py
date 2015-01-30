@@ -15,6 +15,7 @@ import subprocess
 from subprocess import Popen
 # from server_serial import SimSerial
 from termcolor import colored
+import sched
 
 
 '''
@@ -31,12 +32,13 @@ exitFlag = 0
 
 class Redirector(object):
 
-    def __init__(self, serial, logger, config, lock, socket):
+    def __init__(self, serial, logger, config, lock, socket, scheduler):
         self.serial = serial
         self.lock = lock
         self.logger = logger
         self.socket = socket
         self.config = config
+        self.scheduler = scheduler
         self.filename_config = '/home/Adquisidor/librerias/config.ini'
         self.salto_de_linea = '\r'
         self.interfaz_socket = 'eth0'
@@ -45,8 +47,6 @@ class Redirector(object):
         self.ip = ''
         self.dato_anterior = ''
         self.delay = 10
-        self.contador_salida = 0
-        self.contador_delaysocket = 0
         self.contador_parser_options = 45
         self.trama_salida = tram_to_serial.Inicio()
         self.respuesta_hal = ''
@@ -66,6 +66,8 @@ class Redirector(object):
         self.togle_lan = True
         self.togle_nolan = True
 
+        self.thread_alive = False
+
     def inicializacion(self):
 
         self.logger.info('Inician las tareas socket y serial')
@@ -77,7 +79,6 @@ class Redirector(object):
     def adquisidor_serial(self):
         while True:
             time.sleep(1.0/3)
-            self.contador_delaysocket += 1
 
             # falta exception serial timeoyt y desconexion
             '''
@@ -110,18 +111,17 @@ class Redirector(object):
             if self.trama_valida:
                 try:
                     tram_to_socket.actualizar(self.respuesta_hal)
-                    self.delay = tram_to_socket.get_delay()*3
+                    self.delay = tram_to_socket.get_delay()
                 except IndexError:
                     self.logger.warn('Trama no valida: '+self.respuesta_hal)
 
-                if self.contador_delaysocket > self.delay:
-                    if not self.lan_config:
-                        self.parser_status_socket()
-                    if self.lan_config:
-                        self.contador_delaysocket = 0
-                        self.tarea_socket = threading.Thread(target=self.adquisidor_socket,
-                                                             args=(self.ip, self.port, self.respuesta_hal))
-                        self.tarea_socket.start()
+                if not self.lan_config:
+                    self.parser_status_socket()
+                if self.lan_config and not self.thread_alive:
+                    self.thread_alive = not self.thread_alive
+                    self.scheduler.enter(self.delay, 1, self.adquisidor_socket,
+                                         (self.ip, self.port, self.respuesta_hal,))
+                    self.scheduler.run()
 
             if not(to_serial.empty()):
                 try:
@@ -173,6 +173,8 @@ class Redirector(object):
             self.lan_config = False
         finally:
             conx.close()
+            self.thread_alive = not self.thread_alive
+
 
     def inicializacion_serial(self):
         time.sleep(10)
@@ -304,6 +306,6 @@ if __name__ == '__main__':
     Config = ConfigParser.ConfigParser()
     lock = Lock()
 
-    R = Redirector(ser, logger, Config, lock, socket)
+    R = Redirector(ser, logger, Config, lock, socket, scheduler=sched.scheduler(time.time, time.sleep))
     R.inicializacion()
     R.adquisidor_serial().join()

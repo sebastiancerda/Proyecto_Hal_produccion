@@ -131,7 +131,7 @@ def clientthread(conn):
 
         trama = trama_header + trama_online + trama_batch + trama_mp32 + trama_fecha + trama_proceso + \
                 tiempo_respuesta + tasa_rechazo
-        print colored(trama,  'yellow')
+        print colored(fecha + ' | ' + hora + trama,  'yellow')
 
         msje_salida = trama.decode('ascii').encode('EBCDIC-CP-BE')
         conn.sendall(msje_salida)
