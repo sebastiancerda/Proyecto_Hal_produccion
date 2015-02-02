@@ -196,6 +196,8 @@ class Redirector(object):
                 self.logger.warning(self.respuesta_hal)
                 self.logger.warning(e)
                 self.contador_salida += 1
+                for i in range(10):
+                    self.serial.write('a' + self.salto_de_linea)
 
         print 'inicializacion serial'
         self.logger.info('Creada instancia de comunicacion con el Hardware')
@@ -293,16 +295,15 @@ class Redirector(object):
 if __name__ == '__main__':
     ser = serial.Serial()
     # ser = SimSerial()
-    filename = '/home/Adquisidor/Logs/events.log'
-    logger = logging.getLogger('root')
-    logging.basicConfig(filename=filename,
-                        format='%(asctime)s - %(funcName)s - %(levelname)s: %(message)s ',
-                        datefmt='%m/%d/%Y %I:%M:%S %p',
-                        level=logging.DEBUG)
+    filename = '/home/Adquisidor/Logs/Eventos_HAL3270.log'
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
     handler = logging.handlers.TimedRotatingFileHandler(filename,
-                                                        when='H',
+                                                        when='m',
                                                         interval=1,
                                                         backupCount=5)
+    formatter = logging.Formatter('%(asctime)s - %(funcName)s - %(levelname)s: %(message)s')
+    handler.setFormatter(formatter)
     logger.addHandler(handler)
     logging.info('Logger iniciado')
     logging.info('Modulo principal iniciado')

@@ -1,6 +1,7 @@
 __author__ = 'sbea'
 import sys
 import time
+import datetime
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import glob
@@ -64,17 +65,18 @@ class MyHandler(PatternMatchingEventHandler):
         # the file will be processed there
         print event.src_path, event.event_type  # print now only for degug
         if event.event_type == 'moved':
+            x = datetime.datetime.now()
+            fecha = '/'.join([str(x.year), time.strftime('%m'), time.strftime('%d')])
+            hora = time.strftime('%H:%M:%S')
             time.sleep(0.5)
-            lista = glob.glob('timed_test.log.*')
+            lista = glob.glob('Eventos_HAL3270.log.*')
             lista.sort(key=tokenize)
             print lista
             sendMail(['Hal3270-Loggers <sebastian.cerda@pypchile.cl>'],
                      'PypChile Hal3270-Loggers <sebastian.cerda@pypchile.cl>',
-                     'Loggers!',
-                     'Heya buddy! Say hello to Python! :)',
+                     'Logger Hal3270  : ' + fecha + '|' + hora,
+                     'Loggers Hal3270' + fecha + '|' + hora,
                      [lista[len(lista) - 1]])
-
-
 
     def on_modified(self, event):
         self.process(event)
@@ -89,15 +91,14 @@ class MyHandler(PatternMatchingEventHandler):
         self.process(event)
 
 if __name__ == '__main__':
+    time.sleep(30)
     args = sys.argv[1:]
     observer = Observer()
     observer.schedule(MyHandler(), path=args[0] if args else '.')
     observer.start()
-
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-
     observer.join()
