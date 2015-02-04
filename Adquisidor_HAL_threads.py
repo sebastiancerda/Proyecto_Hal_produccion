@@ -67,6 +67,9 @@ class Redirector(object):
         self.togle_lan = True
         self.togle_nolan = True
 
+        self.buffer = ''
+        self.last_received = ''
+
     def inicializacion(self):
 
         self.logger.info('Inician las tareas socket y serial')
@@ -78,15 +81,13 @@ class Redirector(object):
     def adquisidor_serial(self):
         while True:
             time.sleep(1.0/3)
-            self.contador_delaysocket += 1
-
             # falta exception serial timeoyt y desconexion
             '''
             Manejo del puerto serial
             '''
             self.trama_salida = tram_to_serial.director_trama()
             self.serial.write(self.trama_salida + self.salto_de_linea)
-            trama_respuesta = self.serial.readline().splitlines()[0]
+            trama_respuesta = self.receiving_serial()
             pos_contador = trama_respuesta.find(',')
             self.respuesta_hal = trama_respuesta[pos_contador + 1::]
             if not(self.respuesta_hal == self.dato_anterior):
@@ -102,12 +103,12 @@ class Redirector(object):
                 self.logger.warning('Trama de respuesta de microcontrolador: ' + self.respuesta_hal)
                 self.logger.warning(trama_respuesta)
                 self.logger.warning('Trama enviada al microcontrolador: ' + self.trama_salida)
-                self.serial.write(self.trama_salidaInicial + self.salto_de_linea)
-                self.logger.info('Reiniciando microcontrolador')
-                self.respuesta_hal = ser.readline()
-                self.logger.info('Evento Hardware: ' + self.respuesta_hal)
-                tram_to_serial.act_botones(self.respuesta_hal)
+            finally:
+                self.contador_delaysocket += 1
 
+
+            print colored(self.contador_delaysocket, 'yellow')
+            print colored(str(self.delay) + '  ' + str(time.time()), 'red')
             if self.trama_valida:
                 try:
                     tram_to_socket.actualizar(self.respuesta_hal)
@@ -115,9 +116,10 @@ class Redirector(object):
                 except IndexError:
                     self.logger.warn('Trama no valida: '+self.respuesta_hal)
 
-                if self.contador_delaysocket > self.delay:
+                if self.contador_delaysocket >= self.delay:
                     if not self.lan_config:
                         self.parser_status_socket()
+                        self.contador_delaysocket = 0
                     if self.lan_config:
                         self.contador_delaysocket = 0
                         self.tarea_socket = threading.Thread(target=self.adquisidor_socket,
@@ -189,8 +191,8 @@ class Redirector(object):
             self.respuesta_hal = self.serial.readline()
             self.logger.info('Empiezan las comunicaciones con el Hardware')
             try:
-                tram_to_serial.act_botones(self.respuesta_hal)
                 tram_to_serial.act_diccionario(dicc)
+                tram_to_serial.act_botones(self.respuesta_hal)
             except IndexError, e:
                 self.logger.warning('Error en trama proveniente del Hardware')
                 self.logger.warning(self.respuesta_hal)
@@ -215,6 +217,36 @@ class Redirector(object):
                 self.logger.info('Error en el formato de configuracion')
                 self.logger.info('Exception en %s' % option)
         return dict1
+
+    def receiving_serial(self):
+        self.buffer = ''
+        while True:
+            self.buffer += self.serial.read(self.serial.inWaiting())
+            if '\n' in self.buffer:
+                lines = self.buffer.split('\n')
+                respuesta_hal = lines[-2]
+                self.buffer = lines[-1]
+                return respuesta_hal
+
+    def reinicio_serial_comunicacion(self):
+        self.logger.info('Empieza rutina de reinicio de comunicacion con el Hardware')
+        intentos = 0
+        while True:
+            intentos += 1
+            self.buffer = self.buffer + self.serial.read(self.serial.inWaiting())
+            if '\n' in self.buffer:
+                lines = self.buffer.split('\n')
+                self.respuesta_hal = lines[-2]
+                self.buffer = lines[-1]
+                try:
+                    print colored(self.respuesta_hal, 'red')
+                    tram_to_serial.act_botones(self.respuesta_hal)
+                    self.trama_valida = True
+                    break
+                except IndexError:
+                    self.trama_valida = False
+        self.logger.info('Trama Valida, servicio de comunicacion serial reiniciado luego de %s intentos' % intentos)
+        self.logger.info(self.respuesta_hal)
 
     def parser_status_socket(self):
         stauts_ethernet = self.estado_ethernet(self.interfaz_socket)
@@ -262,8 +294,8 @@ class Redirector(object):
             self.config_lan = True
             self.no_configlan = False
 
-
-    def estado_ethernet(self, ethx):
+    @staticmethod
+    def estado_ethernet(ethx):
         c = Popen(['/sbin/ip', 'link', 'show', ethx], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         c2, err = c.communicate()
         up = c2.find(' UP ')
@@ -313,4 +345,3 @@ if __name__ == '__main__':
 
     R = Redirector(ser, logger, Config, lock, socket)
     R.inicializacion()
-    R.adquisidor_serial().join()

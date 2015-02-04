@@ -11,8 +11,8 @@
 ### END INIT INFO
 
 # Change the next 3 lines to suit where you install your script and what you want to call it
-DIR= /usr/local/sbin
-DAEMON=$DIR/Adquisidor_Hal.py
+DIR=/home/Adquisidor/
+DAEMON=$DIR/Adquisidor_HAL_threads.py
 DAEMON_NAME=Servicio_Hal_3270
 
 # Add any command line options for your daemon here
